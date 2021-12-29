@@ -5,7 +5,7 @@
 #' @import scales
 #' @name ggbubbleHeatmap
 #' @param df Dataframe with the results of all GSEA analyses. Returned by
-#' \code{\link[ggseabubble]{GSEAtable}}).
+#' \code{\link[ggseabubble]{GSEAtable}}.
 #' @param n.perm Number of permutations used during the GSEA analysis.
 #' @param FDR.threshold Threshold of significance. All bubbles with a FDR >=
 #' \code{FDR.threshold} will have no fill in order to make the visualization

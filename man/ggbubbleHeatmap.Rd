@@ -8,7 +8,7 @@ ggbubbleHeatmap(df, n.perm = 1000, FDR.threshold = 0.05)
 }
 \arguments{
 \item{df}{Dataframe with the results of all GSEA analyses. Returned by
-\code{\link[ggseabubble]{GSEAtable}}).}
+\code{\link[ggseabubble]{GSEAtable}}.}
 
 \item{n.perm}{Number of permutations used during the GSEA analysis.}
 
