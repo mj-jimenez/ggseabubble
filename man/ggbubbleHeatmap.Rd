@@ -4,11 +4,17 @@
 \alias{ggbubbleHeatmap}
 \title{Draws a bubble heatmap}
 \usage{
-ggbubbleHeatmap(df)
+ggbubbleHeatmap(df, n.perm = 1000, FDR.threshold = 0.05)
 }
 \arguments{
 \item{df}{Dataframe with the results of all GSEA analyses. Returned by
 \code{\link[ggseabubble]{GSEAtable}}).}
+
+\item{n.perm}{Number of permutations used during the GSEA analysis.}
+
+\item{FDR.threshold}{Threshold of significance. All bubbles with a FDR >=
+\code{FDR.threshold} will have no fill in order to make the visualization
+easier.}
 }
 \value{
 A \code{ggplot2} object.

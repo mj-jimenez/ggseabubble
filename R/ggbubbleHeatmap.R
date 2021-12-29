@@ -6,11 +6,21 @@
 #' @name ggbubbleHeatmap
 #' @param df Dataframe with the results of all GSEA analyses. Returned by
 #' \code{\link[ggseabubble]{GSEAtable}}).
+#' @param n.perm Number of permutations used during the GSEA analysis.
+#' @param FDR.threshold Threshold of significance. All bubbles with a FDR >=
+#' \code{FDR.threshold} will have no fill in order to make the visualization
+#' easier.
 #' @return A \code{ggplot2} object.
 #' @examples
 #' @export
 
-ggbubbleHeatmap <- function(df) {
+ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05) {
+  # Transform the FDR = 0.
+  df <- df %>%
+    mutate(FDR.q.val = if_else(FDR.q.val == 0 , 1/(n.perm * 10), FDR.q.val))
+  # Significance variable.
+  df <- df %>%
+    mutate(SIGNIFICANCE = if_else(FDR.q.val < FDR.threshold, TRUE, FALSE))
   # Color gradient.
   color.gradient <- c(min = "#3B7FB6", center = "white", max = "#DF2727")
   NES <- df %>% select(NES) %>% pull
@@ -38,6 +48,8 @@ ggbubbleHeatmap <- function(df) {
   # Plot.
   p <- ggplot(df, aes(x = COMPARISON, y = NAME)) +
     geom_point(aes(color = NES, size = -log10(FDR.q.val)), shape = 16) +
+    geom_point(data = subset(df, !SIGNIFICANCE), fill = "white", stroke = 1,
+               aes(size = -log10(FDR.q.val), color = NES), shape = 21) +
     scale_color_gradientn(colours = color.gradient, guide = "colorbar",
                           values = scales::rescale(unique(c(min.val, 0,
                                                             max.val))),
