@@ -25,7 +25,7 @@ GSEAtable <- function(dir) {
   # Bind all reports, reorder the columns and convert some columns to factors
   # and other to numeric.
   gsea_table <- do.call("rbind", tables) %>%
-    relocate(NAME:LEADING.EDGE, .after = last_col())
+    relocate(NAME:LEADING.EDGE, .after = last_col()) %>%
     mutate(across(COMPARISON:GS.br..follow.link.to.MSigDB, as.factor),
            across(SIZE:RANK.AT.MAX, as.numeric)) %>%
     relocate(NAME:LEADING.EDGE, .after = last_col())
