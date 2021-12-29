@@ -4,7 +4,7 @@
 #' @import tidyverse
 #' @name GSEAtable
 #' @param dir Directory where the GSEA results can be found.
-#' @return A table with the results for all GSEA analyses.
+#' @return A dataframe with the results of all GSEA analyses.
 #' @examples
 #' @export
 

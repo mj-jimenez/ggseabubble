@@ -10,7 +10,7 @@ GSEAtable(dir)
 \item{dir}{Directory where the GSEA results can be found.}
 }
 \value{
-A table with the results for all GSEA analyses.
+A dataframe with the results of all GSEA analyses.
 }
 \description{
 This function creates a single table with all the GSEA results
