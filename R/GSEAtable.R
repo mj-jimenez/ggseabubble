@@ -19,7 +19,7 @@ GSEAtable <- function(dir) {
     signature <- gsub(pattern = ".Gsea.*$", replacement = "" ,
                       tail(unlist(strsplit(comp_dir, "_")), n = 1))
     comparison <- unlist(strsplit(comp_dir, split = paste0("_", signature)))[1]
-    t <- read.table(paste0(dir, "/", files[1]), sep = "\t", header = TRUE) %>%
+    t <- read.table(paste0(dir, "/", x), sep = "\t", header = TRUE) %>%
       select(-X) %>% mutate(COMPARISON = comparison, SIGNATURE = signature)
   })
   # Bind all reports, reorder the columns and convert some columns to factors
