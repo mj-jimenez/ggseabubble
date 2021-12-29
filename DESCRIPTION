@@ -1,12 +1,14 @@
 Package: ggseabubble
 Type: Package
-Title: What the Package Does (Title Case)
+Title: R package for creating publication-ready bubble heatmaps
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Maria Jose Jimenez-Santos
+Maintainer: Maria Jose Jimenez-Santos <mjjimenez@cnio.es>
+Description: Creates bubble heatmaps using ggplot2 and GSEA results.
+URL: https://gitlab.com/mjjimenez/ggseabubble
+Depends: R (>= 4.0.5)
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
+BugReports: https://gitlab.com/mjjimenez/ggseabubble/-/issues
 RoxygenNote: 7.1.1
