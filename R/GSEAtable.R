@@ -15,7 +15,7 @@ GSEAtable <- function(dir) {
   # Read all reports and add two columns with the name of the comparison and the
   # signature used.
   tables <- lapply(files, function(x) {
-    comp_dir <- dirname(x)
+    comp_dir <- basename(dirname(x))
     signature <- gsub(pattern = ".Gsea.*$", replacement = "" ,
                       tail(unlist(strsplit(comp_dir, "_")), n = 1))
     comparison <- unlist(strsplit(comp_dir, split = paste0("_", signature)))[1]
