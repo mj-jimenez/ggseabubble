@@ -10,11 +10,14 @@
 #' @param FDR.threshold Threshold of significance. All bubbles with a FDR >=
 #' \code{FDR.threshold} will have no fill in order to make the visualization
 #' easier.
+#' @param bubble.size.range Numeric vector of length 2 indicating the minimum
+#' and maximum bubble size.
 #' @return A \code{ggplot2} object.
 #' @examples
 #' @export
 
-ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05) {
+ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
+                            bubble.size.range = c(1, 10)) {
   # Transform the FDR = 0.
   df <- df %>%
     mutate(FDR.q.val = if_else(FDR.q.val == 0 , 1/(n.perm * 10), FDR.q.val))
@@ -44,7 +47,8 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05) {
           axis.line = element_blank(),
           legend.box.just = "left"),
     scale_x_discrete(position = "top"),
-    labs(x = NULL, y = NULL))
+    labs(x = NULL, y = NULL),
+    scale_size_continuous(range = bubble.size.range))
   # Plot.
   p <- ggplot(df, aes(x = COMPARISON, y = NAME)) +
     geom_point(aes(color = NES, size = -log10(FDR.q.val)), shape = 16) +
@@ -57,7 +61,8 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05) {
     scale_fill_manual(values = "white",
                       labels = paste("FDR.q.val >= ", FDR.threshold)) +
     guides(colour = guide_colorbar(order = 1), size = guide_legend(order = 2),
-           fill = guide_legend(order = 3, override.aes = list(size = 7))) +
+           fill = guide_legend(order = 3,
+                               override.aes = list(size = max(bubble.size.range)))) +
     bubble.theme
   return(p)
 }

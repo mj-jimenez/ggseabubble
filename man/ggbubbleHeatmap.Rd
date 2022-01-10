@@ -4,7 +4,12 @@
 \alias{ggbubbleHeatmap}
 \title{Draws a bubble heatmap}
 \usage{
-ggbubbleHeatmap(df, n.perm = 1000, FDR.threshold = 0.05)
+ggbubbleHeatmap(
+  df,
+  n.perm = 1000,
+  FDR.threshold = 0.05,
+  bubble.size.range = c(1, 10)
+)
 }
 \arguments{
 \item{df}{Dataframe with the results of all GSEA analyses. Returned by
@@ -15,6 +20,9 @@ ggbubbleHeatmap(df, n.perm = 1000, FDR.threshold = 0.05)
 \item{FDR.threshold}{Threshold of significance. All bubbles with a FDR >=
 \code{FDR.threshold} will have no fill in order to make the visualization
 easier.}
+
+\item{bubble.size.range}{Numeric vector of length 2 indicating the minimum
+and maximum bubble size.}
 }
 \value{
 A \code{ggplot2} object.
