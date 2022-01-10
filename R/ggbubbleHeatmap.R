@@ -20,7 +20,7 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05) {
     mutate(FDR.q.val = if_else(FDR.q.val == 0 , 1/(n.perm * 10), FDR.q.val))
   # Significance variable.
   df <- df %>%
-    mutate(SIGNIFICANCE = if_else(FDR.q.val < FDR.threshold, TRUE, FALSE))
+    mutate(Significance = if_else(FDR.q.val < FDR.threshold, TRUE, FALSE))
   # Color gradient.
   color.gradient <- c(min = "#3B7FB6", center = "white", max = "#DF2727")
   NES <- df %>% select(NES) %>% pull
@@ -48,11 +48,16 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05) {
   # Plot.
   p <- ggplot(df, aes(x = COMPARISON, y = NAME)) +
     geom_point(aes(color = NES, size = -log10(FDR.q.val)), shape = 16) +
-    geom_point(data = subset(df, !SIGNIFICANCE), fill = "white", stroke = 1,
-               aes(size = -log10(FDR.q.val), color = NES), shape = 21) +
+    geom_point(data = subset(df, !Significance), stroke = 1, shape = 21,
+               aes(size = -log10(FDR.q.val), color = NES, fill = Significance)) +
     scale_color_gradientn(colours = color.gradient, guide = "colorbar",
                           values = scales::rescale(unique(c(min.val, 0,
                                                             max.val))),
-                          limits = c(min.val, max.val)) + bubble.theme
+                          limits = c(min.val, max.val)) +
+    scale_fill_manual(values = "white",
+                      labels = paste("FDR.q.val >= ", FDR.threshold)) +
+    guides(colour = guide_colorbar(order = 1), size = guide_legend(order = 2),
+           fill = guide_legend(order = 3, override.aes = list(size = 7))) +
+    bubble.theme
   return(p)
 }
