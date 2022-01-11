@@ -8,7 +8,10 @@ ggbubbleHeatmap(
   df,
   n.perm = 1000,
   FDR.threshold = 0.05,
-  bubble.size.range = c(1, 10)
+  bubble.size.range = c(1, 10),
+  cluster.rows = TRUE,
+  cluster.distance = "euclidean",
+  cluster.method = "complete"
 )
 }
 \arguments{
@@ -23,9 +26,17 @@ easier.}
 
 \item{bubble.size.range}{Numeric vector of length 2 indicating the minimum
 and maximum bubble size.}
+
+\item{cluster.rows}{Logical. Whether rows should be clustered.}
+
+\item{cluster.distance}{(\code{\link[stats]{dist}}'s \code{method}) Distance
+measure to be used.}
+
+\item{cluster.method}{(\code{\link[stats]{hclust}}'s \code{method})
+Clustering method to be used.}
 }
 \value{
-A \code{ggplot2} object.
+A \code{patchwork} object.
 }
 \description{
 This function draws a bubble heatmap where tested pathways
