@@ -10,6 +10,7 @@ ggbubbleHeatmap(
   FDR.threshold = 0.05,
   bubble.size.range = c(1, 10),
   cluster.rows = TRUE,
+  cluster.cols = FALSE,
   cluster.distance = "euclidean",
   cluster.method = "complete"
 )
@@ -28,6 +29,8 @@ easier.}
 and maximum bubble size.}
 
 \item{cluster.rows}{Logical. Whether rows should be clustered.}
+
+\item{cluster.cols}{Logical. Whether cols should be clustered.}
 
 \item{cluster.distance}{(\code{\link[stats]{dist}}'s \code{method}) Distance
 measure to be used.}

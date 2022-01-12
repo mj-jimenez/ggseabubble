@@ -16,6 +16,7 @@
 #' @param bubble.size.range Numeric vector of length 2 indicating the minimum
 #' and maximum bubble size.
 #' @param cluster.rows Logical. Whether rows should be clustered.
+#' @param cluster.cols Logical. Whether cols should be clustered.
 #' @param cluster.distance (\code{\link[stats]{dist}}'s \code{method}) Distance
 #' measure to be used.
 #' @param cluster.method (\code{\link[stats]{hclust}}'s \code{method})
@@ -26,21 +27,34 @@
 
 ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
                             bubble.size.range = c(1, 10), cluster.rows = TRUE,
+                            cluster.cols = FALSE,
                             cluster.distance = "euclidean",
                             cluster.method = "complete") {
+  # Get wide df.
+  wide.df <- reshape2::dcast(df, NAME ~ COMPARISON, value.var = "NES") %>%
+    `rownames<-`(.[, "NAME"]) %>% select(-NAME)
   if (cluster.rows) {
-    # Get wide df.
-    wide.df <- reshape2::dcast(df, NAME ~ COMPARISON, value.var = "NES") %>%
-      `rownames<-`(.[, "NAME"]) %>% select(-NAME)
     # Clustering.
-    hc <- hclust(dist(wide.df, method = cluster.distance),
-                 method = cluster.method)
+    hc.rows <- hclust(dist(wide.df, method = cluster.distance),
+                      method = cluster.method)
     # Reorder df NAMES.
-    df$NAME <- factor(df$NAME, levels = hc$labels[hc$order])
+    df$NAME <- factor(df$NAME, levels = hc.rows$labels[hc.rows$order])
     # Tree plot.
-    tree <- ggtree::ggtree(hc, layout = "rectangular")
+    tree.rows <- ggtree::ggtree(hc.rows, layout = "rectangular")
   } else {
-    tree <- NULL
+    tree.rows <- patchwork::plot_spacer()
+  }
+  if (cluster.cols) {
+    # Clustering.
+    hc.cols <- hclust(dist(t(wide.df), method = cluster.distance),
+                      method = cluster.method)
+    # Reorder df COMPARISON.
+    df$COMPARISON <- factor(df$COMPARISON, levels = hc.cols$labels[hc.cols$order])
+    # Tree plot.
+    tree.cols <- ggtree::ggtree(hc.cols, layout = "rectangular") +
+      scale_x_reverse() + coord_flip()
+  } else {
+    tree.cols <- patchwork::plot_spacer()
   }
   # Transform the FDR = 0.
   df <- df %>%
@@ -65,12 +79,12 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
   bubble.theme <- list(
     theme_classic(),
     theme(axis.ticks.x = element_blank(),
-          axis.text.x = element_text(angle = 45, vjust = 0, hjust = 0),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
           axis.ticks.y = element_blank(),
-          axis.text.y = element_text(hjust = 0),
+          axis.text.y = element_text(vjust = 0.5, hjust = 0),
           axis.line = element_blank(),
           legend.box.just = "left"),
-    scale_x_discrete(position = "top"),
+    scale_y_discrete(position = "right"),
     labs(x = NULL, y = NULL),
     scale_size_continuous(range = bubble.size.range))
   # Bubble plot.
@@ -89,7 +103,10 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
                                override.aes = list(size = max(bubble.size.range)))) +
     bubble.theme
   # Merge plots.
-  final <- (tree + bubble) + plot_layout(widths = c(1, 3)) &
-    theme(plot.margin = unit(rep(0, 4), "cm"))
+  patchwork.heights <- patchwork::plot_layout(heights = c(1, 5))
+  patchwork.theme <- theme(plot.margin = unit(rep(0, 4), "cm"))
+  column1 <- plot_spacer()/tree.rows + patchwork.heights & patchwork.theme
+  column2 <- tree.cols/bubble + patchwork.heights & patchwork.theme
+  final <- patchwork::wrap_plots(column1, column2, ncol = 2, widths = c(1, 5))
   return(final)
 }
