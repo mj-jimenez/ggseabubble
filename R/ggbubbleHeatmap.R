@@ -33,7 +33,7 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
     wide.df <- reshape2::dcast(df, NAME ~ COMPARISON, value.var = "NES") %>%
       `rownames<-`(.[, "NAME"]) %>% select(-NAME)
     # Clustering.
-    hc <- hclust(dist(wide.df[, -1], method = cluster.distance),
+    hc <- hclust(dist(wide.df, method = cluster.distance),
                  method = cluster.method)
     # Reorder df NAMES.
     df$NAME <- factor(df$NAME, levels = hc$labels[hc$order])
