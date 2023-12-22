@@ -10,6 +10,8 @@ ggbubbleHeatmap(
   FDR.threshold = 0.05,
   bubble.size.range = c(1, 10),
   cluster.rows = TRUE,
+  annotation.rows = NULL,
+  color.rows = NULL,
   cluster.cols = FALSE,
   cluster.distance = "euclidean",
   cluster.method = "complete"
@@ -29,6 +31,11 @@ easier.}
 and maximum bubble size.}
 
 \item{cluster.rows}{Logical. Whether rows should be clustered.}
+
+\item{annotation.rows}{Dataframe with a column containing the annotation
+factor. Row names must match gene set names.}
+
+\item{color.rows}{Vector with color levels as names.}
 
 \item{cluster.cols}{Logical. Whether cols should be clustered.}
 

@@ -2,6 +2,7 @@
 #' @description This function draws a bubble heatmap where tested pathways
 #' appear in rows and comparisons in columns. The bubbles are colored by NES and
 #' their size is proportional to the FDR.
+#' @importFrom cowplot get_legend
 #' @importFrom scales rescale
 #' @import tidyverse
 #' @import ggtree
@@ -16,6 +17,9 @@
 #' @param bubble.size.range Numeric vector of length 2 indicating the minimum
 #' and maximum bubble size.
 #' @param cluster.rows Logical. Whether rows should be clustered.
+#' @param annotation.rows Dataframe with a column containing the annotation
+#' factor. Row names must match gene set names.
+#' @param color.rows Vector with color levels as names.
 #' @param cluster.cols Logical. Whether cols should be clustered.
 #' @param cluster.distance (\code{\link[stats]{dist}}'s \code{method}) Distance
 #' measure to be used.
@@ -27,6 +31,7 @@
 
 ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
                             bubble.size.range = c(1, 10), cluster.rows = TRUE,
+                            annotation.rows = NULL, color.rows = NULL,
                             cluster.cols = FALSE,
                             cluster.distance = "euclidean",
                             cluster.method = "complete") {
@@ -58,6 +63,37 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
   if (length(cluster.rows) != 1 | !is.logical(cluster.rows)) {
     stop('cluster.rows must be TRUE or FALSE.')
   }
+  # Check annotation.rows.
+  if (!is.null(annotation.rows)) {
+    anno.factor <- colnames(annotation.rows)
+    if (!is.data.frame(annotation.rows)) {
+      stop('annotation.rows must be a dataframe.')
+    }
+    if (ncol(annotation.rows) != 1) {
+      stop('annotation.rows must contain exactly one column.')
+    }
+    in.annotation.rows <- df$NAME %in% rownames(annotation.rows)
+    if (all(!in.annotation.rows)) {
+      stop('annotation.rows rownames must match NAME column in df.')
+    } else if (any(!in.annotation.rows)) {
+      warning(paste0('Missing annotations for some gene sets: ',
+                     paste0(sort(unique(df$NAME[!in.annotation.rows])),
+                            collapse = ", "), '.'))
+    }
+  }
+  # Check color.rows.
+  if (!is.null(color.rows) & is.null(annotation.rows)) {
+    color.rows <- NULL
+    warning('Missing annotations: color.rows set to NULL.')
+  } else if (!is.null(color.rows)) {
+    if (!is.character(color.rows)) {
+      stop('color.rows must be a character vector.')
+    }
+    in.annotation.lvls <- names(color.rows) %in% unique(annotation.rows[, 1])
+    if (is.null(names(color.rows)) | any(!in.annotation.lvls)) {
+      stop('color.rows names must match all levels in annotation.rows.')
+    }
+  }
   # Check cluster.cols.
   if (length(cluster.cols) != 1 | !is.logical(cluster.cols)) {
     stop('cluster.cols must be TRUE or FALSE.')
@@ -69,6 +105,12 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
                        values_from = "NES") %>%
     tibble::column_to_rownames("NAME")
   wide.df[is.na(wide.df)] <- 0
+  # Annotation colors.
+  if (!is.null(color.rows)) {
+    color.rows <- ggplot2::scale_fill_manual(values = color.rows,
+                                             name = anno.factor)
+  } else color.rows <- NULL
+  # Clusters.
   if (cluster.rows) {
     # Clustering.
     hc.rows <- hclust(dist(wide.df, method = cluster.distance),
@@ -77,6 +119,15 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
     df$NAME <- factor(df$NAME, levels = hc.rows$labels[hc.rows$order])
     # Tree plot.
     tree.rows <- ggtree::ggtree(hc.rows, layout = "rectangular")
+    # Annotation.
+    if (!is.null(annotation.rows)) {
+      tree.rows.width <- round(ncol(annotation.rows)/2, digits = 0)
+      tree.rows <- suppressMessages(
+        ggtree::gheatmap(tree.rows, annotation.rows, offset = 0.2, width = 0.2,
+                         colnames = FALSE, legend_title = anno.factor) +
+          color.rows
+      )
+    }
   } else {
     tree.rows <- patchwork::plot_spacer()
   }
@@ -155,6 +206,7 @@ ggbubbleHeatmap <- function(df, n.perm = 1000, FDR.threshold = 0.05,
   column2 <- tree.cols/bubble +
     patchwork.heights &
     patchwork.theme
-  final <- patchwork::wrap_plots(column1, column2, ncol = 2, widths = c(1, 5))
+  final <- patchwork::wrap_plots(column1, column2, ncol = 2, widths = c(1, 5)) +
+    patchwork::plot_layout(guides = "collect")
   return(final)
 }
