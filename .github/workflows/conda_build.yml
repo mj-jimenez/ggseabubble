@@ -22,10 +22,6 @@ jobs:
           - os: macos-latest
             label: osx-64
             prefix: /Users/runner/miniconda3/envs/ggseabubble_builds
-          
-          - os: windows-latest
-            label: win-64
-            prefix: /Users/runner/miniconda3/envs/ggseabubble_builds
 
     name: ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
@@ -66,10 +62,3 @@ jobs:
         with:
           name: macOS_r-ggseabubble-v1.0.0
           path: /Users/runner/miniconda3/envs/ggseabubble_builds/conda-bld/osx-64/r-ggseabubble-1.0.0-r43_0.tar.bz2
-
-      - name: Archive ggseabubble package for Windows
-        uses: actions/upload-artifact@v3
-        with:
-          name: Windows_r-ggseabubble-v1.0.0
-          path: /Users/runner/miniconda3/envs/ggseabubble_builds/conda-bld/win-64/r-ggseabubble-1.0.0-r43_0.tar.bz2
-
