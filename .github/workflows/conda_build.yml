@@ -38,7 +38,9 @@ jobs:
             use-mamba: true
 
       - name: Update ggseabubble environment
-        run: mamba update -n ggseabubble_builds -f helpers/mambabuild.yml
+        run: |
+          mamba update -n ggseabubble_builds -f helpers/mambabuild.yml
+          conda config --append channels bioconda
       
       - name: Install ggseabubble package
         shell: bash -l {0}
