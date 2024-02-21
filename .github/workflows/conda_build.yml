@@ -23,7 +23,7 @@ jobs:
             label: osx-64
             prefix: /Users/runner/miniconda3/envs/ggseabubble_builds
           
-           - os: windows-latest
+          - os: windows-latest
             label: win-64
             prefix: /Users/runner/miniconda3/envs/ggseabubble_builds
 
