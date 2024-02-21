@@ -1,0 +1,11 @@
+name: ggseabubble_builds
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - boa
+
+channel_priority: strict
