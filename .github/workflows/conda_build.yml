@@ -45,6 +45,7 @@ jobs:
         run: |
           conda activate ggseabubble_builds
           mamba install boa -y
+          conda config --show channels
           mamba mambabuild ./.github/workflows/r-ggseabubble
           mamba install --use-local r-ggseabubble
       
