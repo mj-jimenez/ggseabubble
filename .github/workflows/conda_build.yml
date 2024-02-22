@@ -33,18 +33,21 @@ jobs:
         with:
             miniforge-variant: Mambaforge
             miniforge-version: latest
-            activate-environment: bc_builds
+            activate-environment: ggseabubble_builds
             conda-version: "23.5.2"
             use-mamba: true
 
       - name: Update ggseabubble environment
-        run: mamba update -n ggseabubble_builds -f helpers/mambabuild.yml
+        run: |
+          mamba update -n ggseabubble_builds -f helpers/mambabuild.yml
+          conda config --append channels bioconda
       
       - name: Install ggseabubble package
         shell: bash -l {0}
         run: |
           conda activate ggseabubble_builds
           mamba install boa -y
+          conda config --show channels
           mamba mambabuild ./.github/workflows/r-ggseabubble
           mamba install --use-local r-ggseabubble
       
@@ -52,10 +55,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Linux_r-ggseabubble-v1.0.0
-          path: /usr/share/miniconda3/envs/bc_builds/conda-bld/linux-64/r-ggseabubble-v1.0.0.tar.bz2
+          path: /usr/share/miniconda3/envs/ggseabubble_builds/conda-bld/linux-64/r-ggseabubble-1.0.0-r43_0.tar.bz2
           
       - name: Archive ggseabubble package for macOS
         uses: actions/upload-artifact@v3
         with:
           name: macOS_r-ggseabubble-v1.0.0
-          path: /Users/runner/miniconda3/envs/bc_builds/conda-bld/osx-64/r-ggseabubble-v1.0.0.tar.bz2
+          path: /Users/runner/miniconda3/envs/ggseabubble_builds/conda-bld/osx-64/r-ggseabubble-1.0.0-r43_0.tar.bz2

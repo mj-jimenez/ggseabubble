@@ -25,16 +25,16 @@ requirements:
   host:
     - r-base >=4.0.0
     - r-tidyverse >=2.0.0
-    - bioconductor-ggtree >= 3.8.0
-    - r-patchwork >= 1.1.3
-    - r-scales >= 1.3.0
+    - bioconductor-ggtree >=3.8.0
+    - r-patchwork >=1.1.3
+    - r-scales >=1.3.0
 
   run:
     - r-base >=4.0.0
     - r-tidyverse >=2.0.0
-    - bioconductor-ggtree >= 3.8.0
-    - r-patchwork >= 1.1.3
-    - r-scales >= 1.3.0
+    - bioconductor-ggtree >=3.8.0
+    - r-patchwork >=1.1.3
+    - r-scales >=1.3.0
     
 test:
   commands:
