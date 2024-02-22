@@ -8,20 +8,33 @@ R package for creating publication-ready bubble heatmaps.
 
 A bubble heatmap represents comparisons as columns and signatures as rows. The colour of the bubble is proportional to the NES and the size of the bubble to the FDR-adjusted p-value. Empty bubbles represent non-significant results. Rows and columns can be clustered according to the distance between NES.
 
+<!-- ## Tutorials -->
 
+* Plotting [GSEA](https://www.gsea-msigdb.org/gsea/index.jsp) results.
+* Plotting [fgsea](https://bioconductor.org/packages/release/bioc/html/fgsea.html) results.
 
-<!-- ## Tutorials
+## Installation
+The ggseabubble package is implemented in R >= 4.0.0. We recommend 
+running the installation via mamba: 
 
-* Plotting GSEA results.
-* Plotting fGSEA results.
-
-## Installation -->
+```r
+# Create a conda environment.
+conda create -n ggseabubble 
+# Activate the environment.
+conda activate ggseabubble
+# Install beyondcell package and dependencies.
+mamba install -c mjjimenez r-ggseabubble
+```
 
 ## Authors
 María José Jiménez-Santos
 
-<!-- ## Citation -->
+## Citation
+If you use `ggseabubble` in your work, please cite us:
 
+```
+Jimenez-Santos MJ. ggseabubble: R package for creating publication-ready bubble heatmaps. Version 1.0.0. 2023. doi:10.5281/zenodo.10692491.
+```
 ## Support
 If you have any questions regarding the use of ggseabubble, feel free to submit an [issue](https://github.com/mj-jimenez/ggseabubble/issues).
 
